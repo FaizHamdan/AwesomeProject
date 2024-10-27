@@ -76,18 +76,17 @@ function App(): React.JSX.Element {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
+          <Section title="Nama">
+            Faiz Hamdan Zulfa
           </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
+          <Section title="NIM">
+            22/504512/SV/21651
           </Section>
-          <Section title="Debug">
-            <DebugInstructions />
+          <Section title="Kelas">
+            PGPBL-B
           </Section>
           <Section title="Learn More">
-            Read the docs to discover what to do next:
+            Link Media Sosial
           </Section>
           <LearnMoreLinks />
         </View>
