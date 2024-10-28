@@ -83,10 +83,10 @@ function App(): React.JSX.Element {
             22/504512/SV/21651
           </Section>
           <Section title="Kelas">
-            PGPBL-B
+            B
           </Section>
-          <Section title="Learn More">
-            Link Media Sosial
+          <Section title="Link Social Media :">
+            Read the docs to discover what to do next:
           </Section>
           <LearnMoreLinks />
         </View>
