@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peta Interaktif dengan Marker dan Form Input</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            background: linear-gradient(135deg, #ff5c8d, #e63946);
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        /* Popup Form Styling */
+        #form-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            z-index: 1000;
+            width: 80%;
+            max-width: 400px;
+            overflow-y: auto;
+            max-height: 70%;
+            border: 2px solid #e63946;
+        }
+
+        #form-popup h2 {
+            margin-top: 0;
+            color: #e63946;
+            text-align: center;
+            font-size: 22px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #close-button {
+            background-color: #e63946;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        #close-button:hover {
+            background-color: #D62828;
+        }
+
+        /* Dim Background when Form is Open */
+        #dim-background {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* Add Point Button & Refresh Button */
+        .button-container {
+            position: absolute;
+            bottom: 20px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            width: calc(100% - 40px);
+            padding: 0 20px;
+        }
+
+        /* Add Point Button & Refresh Button */
+        #add-point-btn,
+        #refresh-btn {
+            background: #003366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 48%;
+            transition: background-color 0.3s ease;
+        }
+
+        #add-point-btn:hover,
+        #refresh-btn:hover {
+            background: #0059b3;
+        }
+
+        #refresh-btn {
+            background: #f4a261;
+        }
+
+        #refresh-btn:hover {
+            background: #e76f51;
+        }
+
+        /* Form input styles */
+        #mahasiswaForm input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        #mahasiswaForm input:focus {
+            border-color: #e63946;
+            outline: none;
+        }
+
+        #mahasiswaForm button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        #mahasiswaForm button:hover {
+            background-color: #0059b3;
+        }
+
+        /* Popup styling for the data in popup */
+        .popup-content {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .popup-content i {
+            margin-right: 8px;
+        }
+
+        .popup-content div {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="dim-background"></div>
+    <div class="button-container">
+        <button id="add-point-btn">Tambah Titik</button>
+        <button id="refresh-btn">Refresh</button>
+    </div>
+    <div id="map"></div>
+
+    <!-- Form Popup -->
+    <div id="form-popup">
+        <h2>Tambah Halte</h2>
+        <form id="mahasiswaForm">
+            <input type="text" id="nama" name="nama" placeholder="Nama Halte" required />
+            <input type="text" id="lokasi" name="lokasi" placeholder="Lokasi Halte" required />
+            <input type="number" id="waktu" name="waktu" placeholder="Waktu Operasional" required />
+            <input type="text" id="tipe" name="tipe" placeholder="Booking Tiket" required />
+            <input type="hidden" id="latitude" name="latitude" />
+            <input type="hidden" id="longitude" name="longitude" />
+            <button type="submit">Tambah Data</button>
+            <button type="button" id="close-button">Tutup</button>
+        </form>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([-7.770201535705119, 110.37940238368773], 15);
+
+        // Defining different basemaps
+        var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+
+        var stamenTonerLayer = L.tileLayer('https://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; <a href="https://stamen.com">Stamen Design</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+
+        var cartoDBLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+
+        // Set initial baselayer
+        osmLayer.addTo(map);
+
+        // Baselayer control
+        var baseLayers = {
+            "OpenStreetMap": osmLayer,
+            "Stamen Toner": stamenTonerLayer,
+            "CartoDB": cartoDBLayer
+        };
+
+        L.control.layers(baseLayers).addTo(map);
+
+        var formPopup = document.getElementById('form-popup');
+        var dimBackground = document.getElementById('dim-background');
+        var closeButton = document.getElementById('close-button');
+        var addPointBtn = document.getElementById('add-point-btn');
+        var refreshBtn = document.getElementById('refresh-btn');
+        var mahasiswaForm = document.getElementById('mahasiswaForm');
+        var marker = null;
+
+        // FontAwesome Bus Icon
+        var busIcon = L.divIcon({
+            className: 'fa',
+            html: '<i class="fa-solid fa-bus" style="font-size: 20px; color: blue;"></i>',
+            iconSize: [5, 5],
+        });
+
+        // Handling add point button click
+        addPointBtn.addEventListener('click', function () {
+            map.once('click', function (e) {
+                var latLng = e.latlng;
+                marker = L.marker(latLng, { icon: busIcon }).addTo(map);
+                marker.bindPopup('Klik marker untuk menambahkan data.').openPopup();
+
+                // Open the form when clicking on marker
+                marker.on('click', function () {
+                    document.getElementById('latitude').value = latLng.lat;
+                    document.getElementById('longitude').value = latLng.lng;
+                    formPopup.style.display = 'block';
+                    dimBackground.style.display = 'block';
+                });
+
+                // Hide add point button after the marker is placed
+                addPointBtn.style.display = 'none';
+            });
+        });
+
+        // Close the form without saving
+        closeButton.addEventListener('click', function () {
+            formPopup.style.display = 'none';
+            dimBackground.style.display = 'none';
+            addPointBtn.style.display = 'block';  // Menampilkan kembali tombol tambah titik
+        });
+
+        // Function to load data from API and display it on the map
+        function loadData() {
+            fetch('http://192.168.11.173:3000/mahasiswa')
+                .then(response => response.json())
+                .then(data => {
+                    // Remove existing markers
+                    map.eachLayer(function (layer) {
+                        if (layer instanceof L.Marker) {
+                            layer.remove();
+                        }
+                    });
+
+                    // Display new markers
+                    data.forEach(student => {
+                        var studentMarker = L.marker([student.latitude, student.longitude], { icon: busIcon }).addTo(map)
+                            .bindPopup(`
+                                <div class="popup-content">
+                                    <div><i class="fas fa-bus"></i><strong>${student.nama}</strong></div>
+                                    <div><i class="fas fa-map-marker-alt"></i>${student.lokasi}</div>
+                                    <div><i class="fas fa-clock"></i>${student.waktu}</div>
+                                    <div><i class="fas fa-cogs"></i>${student.tipe}</div>
+                                </div>
+                            `);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+
+        // Load data on initial load
+        loadData();
+
+        // Event to refresh the data
+        refreshBtn.addEventListener('click', function () {
+            loadData(); // Refresh markers
+        });
+
+        // Event to handle form submission and send data to the API
+        mahasiswaForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Prepare the data from the form
+            var formData = new FormData(mahasiswaForm);
+            var data = {
+                nama: formData.get('nama'),
+                lokasi: formData.get('lokasi'),
+                waktu: formData.get('waktu'),
+                tipe: formData.get('tipe'),
+                latitude: formData.get('latitude'),
+                longitude: formData.get('longitude')
+            };
+
+            // Check if all data is filled
+            if (!data.nama || !data.lokasi || !data.waktu || !data.tipe || !data.latitude || !data.longitude) {
+                alert("Semua data harus diisi!");
+                return;
+            }
+
+            // Send the data to the API via POST
+            fetch('http://192.168.11.173:3000/mahasiswa', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(responseData => {
+                    alert('Data berhasil ditambahkan!');
+
+                    // Directly add new marker after successful form submission
+                    var newMarker = L.marker([data.latitude, data.longitude], { icon: busIcon }).addTo(map)
+                        .bindPopup(`
+                            <div class="popup-content">
+                                <div><i class="fas fa-bus"></i><strong>${data.nama}</strong></div>
+                                <div><i class="fas fa-map-marker-alt"></i>${data.lokasi}</div>
+                                <div><i class="fas fa-clock"></i>${data.waktu}</div>
+                                <div><i class="fas fa-cogs"></i>${data.tipe}</div>
+                            </div>
+                        `);
+
+                    formPopup.style.display = 'none';
+                    dimBackground.style.display = 'none';
+
+                    // Refresh the data after adding new data
+                    loadData();
+                    addPointBtn.style.display = 'block'; // Show the add point button again
+                })
+                .catch(error => {
+                    console.error('Error adding data:', error);
+                    alert('Terjadi kesalahan. Silakan coba lagi!');
+                });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,79 +1,95 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-# Getting Started
+---
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## 🚌 **TayoGama**
 
-## Step 1: Start the Metro Server
+**TayoGama** adalah aplikasi yang dirancang untuk mendukung mobilitas civitas akademika Universitas Gadjah Mada (UGM) dengan cara yang efisien dan ramah lingkungan. Aplikasi ini menyediakan informasi tentang rute transportasi ramah lingkungan, termasuk bus listrik **Trans Gadjah Mada**, serta berbagai fitur lainnya untuk mempermudah perjalanan di dalam kampus UGM.
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+---
 
-To start Metro, run the following command from the _root_ of your React Native project:
+## ✨ **Fitur Utama**:
 
-```bash
-# using npm
-npm start
+🚏 **Pemetaan Halte Transportasi Gadjah Mada**  
+Peta interaktif yang menampilkan halte-halte bus listrik Trans Gadjah Mada yang menghubungkan berbagai kawasan di kampus UGM. Pengguna dapat mencari nama halte, lokasi halte, dan jam operasional dengan mudah.
 
-# OR using Yarn
-yarn start
-```
+➕ **Penambahan Titik Informasi Halte**  
+Pengguna dapat menambah informasi tentang titik halte baru yang mungkin belum tercatat, serta memperbarui data halte yang ada.
 
-## Step 2: Start your Application
+🎫 **Pemesanan Tiket**  
+Pengguna dapat melakukan pemesanan tiket secara langsung sesuai dengan lokasi halte yang ingin dinaiki dan tujuan yang dituju.
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+---
 
-### For Android
+## 🛠 **Komponen Pembangun Produk**
 
-```bash
-# using npm
-npm run android
+### *1. Antarmuka Pengguna (Frontend)*
 
-# OR using Yarn
-yarn android
-```
+- **HTML**: Struktur dokumen dan elemen UI seperti peta, formulir input, dan tombol.
+- **CSS**: Desain dan tata letak halaman untuk memastikan pengalaman pengguna yang nyaman dan mudah digunakan, termasuk animasi dan transisi.
+- **JavaScript**: Pengendalian interaksi, seperti  pencarian halte, dan integrasi API untuk memuat data secara dinamis.
 
-### For iOS
+### *2. Library dan Framework*
 
-```bash
-# using npm
-npm run ios
+- **Leaflet.js**: Library JavaScript untuk membuat peta interaktif dan menampilkan posisi halte secara real-time.
+- **Fetch API**: Untuk komunikasi antara frontend dan backend, memungkinkan aplikasi mengambil dan mengirimkan data rute dan informasi halte secara efisien.
 
-# OR using Yarn
-yarn ios
-```
+### *3. Backend*
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+- **Endpoint API**: Berdasarkan arsitektur REST untuk mengelola data rute dan halte:
+  - **`POST /halte`**: Menambahkan data halte baru.
+  - **`GET /halte`**: Mengambil data halte yang ada.
+  - **`PUT/PATCH /halte`**: Melakukan edit data halte yang sudah ada.
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+### *4. Sumber Data*
 
-## Step 3: Modifying your App
+- **Data Rute**: Data rute Trans Gadjah Mada yang diperoleh dari website DPPA UGM.
+- **Data Titik Halte**: Titik-titik halte Trans Gadjah Mada yang ada di lingkungan kampus UGM, yang harus dikelola dan diperbarui secara interaktif.
 
-Now that you have successfully run the app, let's modify it.
+---
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+## 🖼 **Tangkapan Layar Komponen Penting Produk**
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+### *1. Home*  
+🏠 **Halaman Utama**  
+Halaman utama aplikasi yang menyambut pengguna dengan informasi umum mengenai transportasi ramah lingkungan di UGM dan memberikan akses mudah ke berbagai fitur aplikasi.
+<img src="Gambar/Home.jpg" alt="Halaman Home" width="250px">
+<img src="Gambar/Home2.jpg" alt="Halaman Home" width="250px">
 
-## Congratulations! :tada:
+### *2. List Data*  
+📋 **Daftar Halte**  
+Menampilkan daftar halte bus listrik Trans Gadjah Mada yang tersedia, lengkap dengan informasi nama halte, lokasi, dan jadwal operasional bus.
+<img src="Gambar/List.jpg" alt="Halaman List Halte" width="250px">
 
-You've successfully run and modified your React Native App. :partying_face:
 
-### Now what?
+### *3. Edit dan Tambah Data*  
+✏ **Formulir Edit dan Tambah Halte**  
+Formulir interaktif yang memungkinkan pengguna untuk mengedit atau menambah informasi halte, termasuk mengubah lokasi atau menambah jadwal operasional bus.
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+![Formulir Edit Halte](Gambar/Edit.jpg)  
+*Formulir Edit Halte*
+![Formulir Tambah Halte](Gambar/Tambah.jpg)  
+*Formulir Tambah Halte*
 
-# Troubleshooting
+### *4. Tiket*  
+🎫 **Pemesanan/Booking Tiket**  
+Fitur untuk memesan tiket bus sesuai dengan lokasi halte yang akan dinaiki dan tujuan perjalanan, serta informasi terkait ketersediaan armada bus.
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+![Formulir Booking Tiker](Gambar/Tiket.jpg)  
+*Formulir Tiket*
 
-# Learn More
+### *5. Map*  
+🗺 **Peta Interaktif**  
+Peta interaktif yang menampilkan posisi haltsecara real-time untuk memudahkan navigasi pengguna.
 
-To learn more about React Native, take a look at the following resources:
+![Antarmuka Peta](Gambar/Map.jpg)  
+*Peta Posisi Halte*
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+### *6. Profile*  
+👤 **Halaman Profil**  
+Halaman profil pengguna yang memungkinkan mereka melihat dan mengedit informasi pribadi serta pengaturan terkait preferensi rute transportasi.
+
+![Halaman Profil](Gambar/Profil.jpg)  
+*Halaman Profil Pengguna*
+
+---
+

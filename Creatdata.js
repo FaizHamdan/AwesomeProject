@@ -2,22 +2,22 @@ import React, { useState } from 'react'
 import { SafeAreaView, View, ScrollView, TextInput, Button, StyleSheet, Text } from 'react-native';
 
 const Createdata = () => {
-    const jsonUrl = 'http://192.168.230.241:3000/mahasiswa';
-    const [first_name, setFirstName] = useState('');
-    const [last_name, setLastName] = useState('');
-    const [kelas, setKelas] = useState('');
-    const [gender, setGender] = useState('');
-    const [email, setEmail] = useState('');
+    const jsonUrl = 'http://192.168.11.173:3000/mahasiswa';
+    const [nama, setNama] = useState('');
+    const [lokasi, setLokasi] = useState('');
+    const [waktu, setWaktu] = useState('');
+    const [tipe, setTipe] = useState('');
+
 
     const submit = () => {
         const data = {
-            first_name: first_name,
-            last_name: last_name,
-            email: email,
-            kelas: kelas,
-            gender: gender,
+            nama: nama,
+            lokasi: lokasi,
+            waktu: waktu,
+            tipe: tipe,
+            
         };
-        fetch('http://192.168.230.241:3000/mahasiswa', {
+        fetch('http://192.168.11.173:3000/mahasiswa', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -29,11 +29,10 @@ const Createdata = () => {
             .then((json) => {
                 console.log(json);
                 alert('Data tersimpan');
-                setFirstName('');
-                setLastName('');
-                setEmail('');
-                setKelas('');
-                setGender('');
+                setNama('');
+                setLokasi('');
+                setWaktu('');
+                setTipe('');
             })
     }
 
@@ -42,11 +41,10 @@ const Createdata = () => {
             <View>
                 <Text style={styles.title}>Tambah Data Mahasiswa</Text>
                 <ScrollView style={styles.form}>
-                    <TextInput style= {styles.input} placeholder="Nama Depan" value={first_name} onChangeText={(value) => setFirstName(value)} />
-                    <TextInput style= {styles.input}placeholder="Nama Belakang" value={last_name} onChangeText={(value) => setLastName(value)} />
-                    <TextInput style= {styles.input}placeholder="Kelas" value={kelas} onChangeText={(value) => setKelas(value)} />
-                    <TextInput style= {styles.input}placeholder="Jenis Kelamin" value={gender} onChangeText={(value) => setGender(value)} />
-                    <TextInput style= {styles.input}placeholder="Email" value={email} onChangeText={(value) => setEmail(value)} />
+                    <TextInput style= {styles.input} placeholder="Nama" value={nama} onChangeText={(value) => setNama(value)} />
+                    <TextInput style= {styles.input}placeholder="Lokasi" value={lokasi} onChangeText={(value) => setLokasi(value)} />
+                    <TextInput style= {styles.input}placeholder="Waktu Operasional" value={waktu} onChangeText={(value) => setWaktu(value)} />
+                    <TextInput style= {styles.input}placeholder="Booking Tiket" value={tipe} onChangeText={(value) => setTipe(value)} />
                     <Button title="Simpan" style={styles.button} onPress={submit} />
                 </ScrollView>
             </View>
