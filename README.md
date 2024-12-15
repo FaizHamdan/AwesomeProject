@@ -22,7 +22,32 @@ Pengguna dapat melakukan pemesanan tiket secara langsung sesuai dengan lokasi ha
 
 ## 🛠 **Komponen Pembangun Produk**
 
-Berikut adalah versi yang lebih rapi dan teratur dengan gambar yang diurutkan dengan baik:
+### *1. Antarmuka Pengguna (Frontend)*
+
+- **HTML**: Struktur dokumen dan elemen UI seperti peta, formulir input, dan tombol.
+- **CSS**: Desain dan tata letak halaman untuk memastikan pengalaman pengguna yang nyaman dan mudah digunakan, termasuk animasi dan transisi.
+- **JavaScript**: Pengendalian interaksi, seperti  pencarian halte, dan integrasi API untuk memuat data secara dinamis.
+
+### *2. Library dan Framework*
+
+- **Leaflet.js**: Library JavaScript untuk membuat peta interaktif dan menampilkan posisi halte secara real-time.
+- **Fetch API**: Untuk komunikasi antara frontend dan backend, memungkinkan aplikasi mengambil dan mengirimkan data rute dan informasi halte secara efisien.
+
+### *3. Backend*
+
+- **Endpoint API**: Berdasarkan arsitektur REST untuk mengelola data rute dan halte:
+  - **`POST /halte`**: Menambahkan data halte baru.
+  - **`GET /halte`**: Mengambil data halte yang ada.
+  - **`PUT/PATCH /halte`**: Melakukan edit data halte yang sudah ada.
+
+### *4. Sumber Data*
+
+- **Data Rute**: Data rute Trans Gadjah Mada yang diperoleh dari website DPPA UGM.
+- **Data Titik Halte**: Titik-titik halte Trans Gadjah Mada yang ada di lingkungan kampus UGM, yang harus dikelola dan diperbarui secara interaktif.
+
+---
+
+## 🖼 **Tangkapan Layar Komponen Penting Produk**
 
 ---
 
@@ -76,5 +101,4 @@ Halaman profil pengguna yang memungkinkan mereka melihat dan mengedit informasi 
 *Halaman Profil Pengguna*  
 
 ---
-
 
